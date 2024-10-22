@@ -1,0 +1,34 @@
+variable "count" {
+  description = "Number of VPCs to create"
+  type    = number
+  default = 1
+}
+
+variable "cidr_block" {
+  description = "CIDR block for the VPC"
+  type    = string
+  default = "10.0.0.0/16"
+}
+
+variable "region" {
+  description = "The AWS region to deploy resources"
+  type        = string
+}
+
+provider "aws" {
+  region = var.region
+}
+
+resource "aws_vpc" "main" {
+  count = var.count
+  cidr_block = var.cidr_block
+
+  tags = {
+    Name = "FED-Critical_Application"
+    Bank = "FED-Critical_Application"
+  }
+}
+
+output "vpc_ids" {
+  value = aws_vpc.main[*].id
+}
