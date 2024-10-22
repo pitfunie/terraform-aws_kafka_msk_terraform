@@ -1,0 +1,36 @@
+VPC, Subnets, Secruity Continuous Integration and Continuous delivery deployment 
+
+
+main.tf
+
+module "vpc" {
+  source = "./modules/vpc"
+  count  = 127
+  cidr_block = "10.16.0.0/16"
+  region = "us-east-1"
+}
+
+module "subnets" {
+  source    = "./modules/subnets"
+  vpc_id    = module.vpc.vpc_ids
+  region    = "us-east-1"
+}
+
+module "iam" {
+  source = "./modules/iam"
+}
+
+module "security" {
+  source = "./modules/security"
+  vpc_id = module.vpc.vpc_ids
+  region = "us-east-1"
+}
+
+module "messaging" {
+  source = "./modules/messaging"
+  region = "us-east-1"
+}
+
+module "ci_cd" {
+  source = "./modules/ci_cd"
+}
