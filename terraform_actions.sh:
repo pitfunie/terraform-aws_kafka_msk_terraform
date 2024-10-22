@@ -1,0 +1,25 @@
+terraform_actions.sh:
+
+#!/bin/bash
+
+case "$1" in
+  init)
+    terraform init
+    ;;
+  plan)
+    terraform plan -var="region=$2"
+    ;;
+  apply)
+    terraform apply -var="region=$2" -auto-approve
+    ;;
+  destroy)
+    terraform destroy -var="region=$2" -auto-approve
+    ;;
+  *)
+    echo "Usage: $0 {init|plan|apply|destroy} [region]"
+    exit 1
+    ;;
+esac
+
+# This playbook and runbook, along with the commented Terraform code, should guide you through setting up, managing, and verifying the infrastructure for 
+# the Federal Reserve Bank of NY. Adjust the specifics as necessary for your environment and requirements.
