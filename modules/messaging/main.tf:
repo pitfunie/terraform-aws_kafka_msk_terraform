@@ -1,0 +1,43 @@
+modules/messaging/main.tf:
+
+variable "region" {
+  description = "The AWS region to deploy resources"
+  type        = string
+}
+
+provider "aws" {
+  region = var.region
+}
+
+resource "aws_msk_cluster" "example" {
+  cluster_name = "example-cluster"
+  kafka_version = "2.8.0"
+  number_of_broker_nodes = 3
+
+  broker_node_group_info {
+    instance_type = "kafka.m5.large"
+
+    client_subnets = [
+      aws_subnet.web[0].id,
+      aws_subnet.web[1].id
+    ]
+
+    security_groups = [
+      aws_security_group.example.id
+    ]
+  }
+}
+
+resource "aws_sqs_queue" "example" {
+  name = "example-queue"
+}
+
+resource "aws_sns_topic" "example" {
+  name = "example-topic"
+}
+
+resource "aws_sns_topic_subscription" "example" {
+  topic_arn = aws_sns_topic.example.arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.example.arn
+}
