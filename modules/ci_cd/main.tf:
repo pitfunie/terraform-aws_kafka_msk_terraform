@@ -1,0 +1,12 @@
+modules/ci_cd/main.tf:
+
+resource "aws_codedeploy_application" "example" {
+  name = "example-application"
+}
+
+resource "aws_codedeploy_deployment_group" "example" {
+  app_name            = aws_codedeploy_application.example.name
+  deployment_group_name = "example-deployment-group"
+
+  service_role_arn = aws_iam_role.example.arn
+}
